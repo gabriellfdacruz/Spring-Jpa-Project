@@ -1,8 +1,8 @@
 # API CRUD de Carros com Spring Boot
 
-Este repositório demonstra a construção de uma API REST completa utilizando **Spring Boot**, aplicando operações CRUD com integração ao banco de dados através do **Spring Data JPA**.
+Este projeto demonstra a criação de uma API REST utilizando **Spring Boot**, aplicando operações CRUD com integração ao banco de dados através do **Spring Data JPA**.
 
-O projeto foi estruturado utilizando arquitetura em camadas e apresenta conceitos fundamentais do desenvolvimento backend moderno com Java.
+A aplicação segue arquitetura em camadas e apresenta conceitos fundamentais do desenvolvimento backend com Java.
 
 ---
 
@@ -10,354 +10,85 @@ O projeto foi estruturado utilizando arquitetura em camadas e apresenta conceito
 
 ## 📁 `config`
 
-Camada responsável pelas configurações e inicialização da aplicação.
+Responsável pela configuração inicial da aplicação.
+
+### `CarroConfig.java`
+
+Utiliza `CommandLineRunner` para inserir dados automaticamente ao iniciar o sistema.
 
 ---
 
-## `CarroConfig.java`
+## 📁 `controller`
 
-Classe responsável por inserir dados iniciais no banco utilizando `CommandLineRunner`.
+Camada responsável pelos endpoints REST.
 
-```java id="k8m3vt"
-public class CarroConfig implements CommandLineRunner
-```
+### `CarroController.java`
 
-### Função:
+Contém as operações CRUD:
 
-* executar código automaticamente ao iniciar a aplicação
-* popular o banco de dados com registros iniciais
+* criar carro
+* buscar por ID
+* listar todos
+* atualizar
+* deletar
 
-### Exemplo:
-
-```java id="u2p9wr"
-Carro c1 = new Carro(
-        null,
-        "Porsche",
-        "911",
-        2017);
-
-carroRepository.saveAll(Arrays.asList(c1));
-```
-
----
-
-# 📁 `controller`
-
-Camada responsável pelos endpoints REST da aplicação.
-
-Recebe requisições HTTP e retorna respostas para o cliente.
-
----
-
-## `CarroController.java`
-
-Classe anotada com:
-
-```java id="p7v4mx"
-@RestController
-@RequestMapping("/carro")
-```
-
-Define:
-
-* controller REST
-* rota base `/carro`
-
----
-
-# 🧠 Conceitos Demonstrados no Controller
-
-## 🔹 Endpoint POST — Criar Carro
-
-```java id="y5n2qt"
-@PostMapping
-public ResponseEntity<Carro> create(
-        @RequestBody Carro obj)
-```
-
-### Exemplo:
-
-```http id="m1r8wx"
-POST /carro
-```
-
-### Body JSON:
-
-```json id="g4p7ls"
-{
-  "marca": "Porsche",
-  "modelo": "911",
-  "ano": 2017
-}
-```
-
----
-
-## 🔹 Endpoint GET — Buscar por ID
-
-```java id="z6m3kv"
-@GetMapping("/{id}")
-```
-
-### Exemplo:
-
-```http id="n8q1pt"
-GET /carro/1
-```
-
----
-
-## 🔹 Endpoint PUT — Atualizar
-
-```java id="w3t9rx"
-@PutMapping("path/{id}")
-```
-
-Atualiza os dados de um carro existente.
-
----
-
-## 🔹 Endpoint DELETE — Remover
-
-```java id="c5v2my"
-@DeleteMapping("/{id}")
-```
-
-Remove um carro do banco de dados.
-
----
-
-## 🔹 Endpoint GET — Listar Todos
-
-```java id="h7p4qw"
-@GetMapping
-```
-
-Retorna todos os carros cadastrados.
-
----
-
-# 📁 `entities`
-
-Camada responsável pelas entidades da aplicação.
-
-Representa os dados persistidos no banco.
-
----
-
-## `Carro.java`
-
-Classe anotada com JPA:
-
-```java id="b2n8vt"
-@Entity
-@Table(name = "tb_carro")
-```
-
-Representa a tabela `tb_carro`.
-
----
-
-# 🧠 Conceitos Demonstrados na Entity
-
-## 🔹 JPA/Hibernate
-
-Mapeamento objeto-relacional utilizando:
-
-* `@Entity`
-* `@Table`
-* `@Id`
-* `@GeneratedValue`
-
-```java id="f4m1zy"
-@Id
-@GeneratedValue(strategy = GenerationType.IDENTITY)
-private Long id;
-```
-
----
-
-## 🔹 Lombok
-
-O projeto utiliza Lombok para reduzir código boilerplate.
-
-### Anotações utilizadas:
-
-```java id="x9r3pk"
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
-```
-
-Geram automaticamente:
-
-* construtores
-* getters
-* setters
-
----
-
-## 🔹 Ordenação do JSON
-
-```java id="j6q8ws"
-@JsonPropertyOrder({
-    "id",
-    "marca",
-    "modelo",
-    "ano"
-})
-```
-
-Define a ordem dos atributos no JSON retornado pela API.
-
----
-
-# 📁 `repository`
-
-Camada responsável pela comunicação com o banco de dados.
-
----
-
-## `CarroRepository.java`
-
-Interface que herda de `JpaRepository`.
-
-```java id="r1p7tx"
-public interface CarroRepository
-        extends JpaRepository<Carro, Long>
-```
-
-O Spring gera automaticamente:
-
-* save
-* findById
-* findAll
-* deleteById
-* update
-
----
-
-# 📁 `service`
-
-Camada responsável pela lógica de negócio da aplicação.
-
----
-
-## `CarroService.java`
-
-Classe anotada com:
-
-```java id="q8m2vy"
-@Service
-```
-
-Responsável por:
-
-* criar carros
-* buscar registros
-* atualizar dados
-* deletar registros
-
----
-
-# 🧠 Conceitos Demonstrados no Service
-
-## 🔹 CRUD Completo
-
-### Create
-
-```java id="n3w7pk"
-public Carro create(Carro obj)
-```
-
----
-
-### Read
-
-```java id="k5r1xt"
-public Optional<Carro> findById(Long id)
-```
-
----
-
-### Update
-
-```java id="u7m4qy"
-public Carro update(Carro obj)
-```
-
----
-
-### Delete
-
-```java id="z2p8wr"
-public void delete(Long id)
-```
-
----
-
-# 🚀 Fluxo da Aplicação
-
-```txt id="v4n6ks"
-Cliente HTTP
-      ↓
-Controller
-      ↓
-Service
-      ↓
-Repository
-      ↓
-Banco de Dados
-```
-
----
-
-# 🌐 Endpoints da API
+### Endpoints:
 
 | Método | Endpoint           | Descrição             |
 | ------ | ------------------ | --------------------- |
 | GET    | `/carro`           | Lista todos os carros |
-| GET    | `/carro/{id}`      | Busca carro por ID    |
-| POST   | `/carro`           | Cria um novo carro    |
+| GET    | `/carro/{id}`      | Busca por ID          |
+| POST   | `/carro`           | Cria um carro         |
 | PUT    | `/carro/path/{id}` | Atualiza um carro     |
 | DELETE | `/carro/{id}`      | Remove um carro       |
 
 ---
 
-# ⚙️ Como Executar
+## 📁 `entities`
 
-## 1️⃣ Clone o repositório
+### `Carro.java`
 
-```bash id="m9q2wx"
-git clone https://github.com/seu-usuario/springboot-crud-carros.git
-```
+Entidade JPA que representa a tabela `tb_carro`.
 
----
+### Atributos:
 
-## 2️⃣ Abra o projeto
+* `id`
+* `marca`
+* `modelo`
+* `ano`
 
-Você pode utilizar:
+Utiliza:
 
-* IntelliJ IDEA
-* VS Code
-* Spring Tool Suite
-
----
-
-## 3️⃣ Execute a aplicação
-
-Via Maven:
-
-```bash id="t5p8rv"
-./mvnw spring-boot:run
-```
+* JPA/Hibernate
+* Lombok
+* JsonPropertyOrder
 
 ---
 
-# 📚 Conceitos Praticados
+## 📁 `repository`
 
-Este projeto demonstra na prática:
+### `CarroRepository.java`
+
+Interface que herda de `JpaRepository`, permitindo operações automáticas no banco de dados.
+
+---
+
+## 📁 `service`
+
+### `CarroService.java`
+
+Responsável pela lógica de negócio da aplicação.
+
+Implementa:
+
+* Create
+* Read
+* Update
+* Delete
+
+---
+
+# 🧠 Conceitos Demonstrados
 
 * Spring Boot
 * REST API
@@ -365,12 +96,32 @@ Este projeto demonstra na prática:
 * Spring Data JPA
 * Hibernate
 * Lombok
-* Entities
-* Controllers
-* Services
-* Repositories
-* Dependency Injection
+* Injeção de Dependência
 * Arquitetura em Camadas
+
+---
+
+# 🚀 Fluxo da Aplicação
+
+```txt id="x4n7pv"
+Cliente → Controller → Service → Repository → Banco de Dados
+```
+
+---
+
+# ⚙️ Como Executar
+
+## Clone o repositório
+
+```bash id="m8q2wr"
+git clone https://github.com/seu-usuario/springboot-crud-carros.git
+```
+
+## Execute a aplicação
+
+```bash id="u5p9kt"
+./mvnw spring-boot:run
+```
 
 ---
 
@@ -387,20 +138,16 @@ Este projeto demonstra na prática:
 
 # 🎯 Objetivo do Projeto
 
-Este projeto foi desenvolvido para praticar a construção de APIs REST completas com Java e Spring Boot.
+Projeto desenvolvido para praticar a construção de APIs REST com Java e Spring Boot utilizando CRUD completo e integração com banco de dados.
 
 Ideal para:
 
-* iniciantes em Spring
-* prática com CRUD
-* estudo de JPA/Hibernate
-* projetos de portfólio
-* aprendizado de arquitetura backend
+* estudo de backend Java
+* prática com Spring Boot
+* projetos de portfólio e GitHub
 
 ---
 
 # 🤝 Contribuição
 
-Contribuições são bem-vindas!
-
-Sugestões de melhorias, novos endpoints ou otimizações podem ser enviadas via Pull Request 🚀
+Contribuições são bem-vindas 🚀
